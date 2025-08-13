@@ -1,0 +1,17 @@
+{
+  "appName": "Modern Node.js Demo",
+  "version": "1.0.0",
+  "database": {
+    "maxConnections": 10,
+    "timeout": 5000
+  },
+  "features": {
+    "analytics": true,
+    "monitoring": true,
+    "caching": false
+  },
+  "api": {
+    "rateLimit": 100,
+    "timeout": 30000
+  }
+}

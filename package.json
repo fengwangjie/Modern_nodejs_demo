@@ -1,0 +1,22 @@
+{
+  "name": "modern-nodejs-examples",
+  "version": "1.0.0",
+  "description": "Modern Node.js patterns and best practices examples",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "node --watch src/app.js",
+    "test": "node --test --watch",
+    "test:coverage": "node --test --experimental-test-coverage",
+    "start": "node src/app.js",
+    "build": "node --experimental-sea-config sea-config.json"
+  },
+  "imports": {
+    "#config": "./src/config/index.js",
+    "#utils/*": "./src/utils/*.js",
+    "#services/*": "./src/services/*.js",
+    "#db": "./src/database/connection.js"
+  }
+}
