@@ -6,11 +6,14 @@ class Monitoring {
   constructor() {
     this.metrics = new Map();
     this.isEnabled = true;
+    this.performanceObserver = null;
     this.setupPerformanceObserver();
   }
 
   setupPerformanceObserver() {
-    const obs = new PerformanceObserver((list) => {
+    this.performanceObserver = new PerformanceObserver((list) => {
+      if (!this.isEnabled) return;
+      
       for (const entry of list.getEntries()) {
         if (entry.duration > 100) { // 记录慢操作
           logger.warn('Slow operation detected', {
@@ -28,7 +31,7 @@ class Monitoring {
       }
     });
 
-    obs.observe({ entryTypes: ['function', 'http', 'dns', 'measure'] });
+    this.performanceObserver.observe({ entryTypes: ['function', 'http', 'dns', 'measure'] });
   }
 
   recordMetric(name, value) {
@@ -86,11 +89,24 @@ class Monitoring {
 
   disable() {
     this.isEnabled = false;
-    logger.info('Monitoring disabled');
+    
+    // 断开 PerformanceObserver 以允许进程退出
+    if (this.performanceObserver) {
+      this.performanceObserver.disconnect();
+      this.performanceObserver = null;
+    }
+    
+    logger.info('Monitoring disabled and observers disconnected');
   }
 
   enable() {
     this.isEnabled = true;
+    
+    // 重新设置 PerformanceObserver
+    if (!this.performanceObserver) {
+      this.setupPerformanceObserver();
+    }
+    
     logger.info('Monitoring enabled');
   }
 }
